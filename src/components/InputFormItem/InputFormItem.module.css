@@ -1,0 +1,13 @@
+.input-form-item {
+    display: grid;
+    grid-template-columns: 18px 80px 1fr;
+    grid-gap: 20px;
+    margin-top: 15px;
+}
+
+.input-form-item__border {
+    background: rgba(255, 255, 255, 0.10);
+    width: 100%;
+    height: 1px;
+    margin-top: 15px;
+}

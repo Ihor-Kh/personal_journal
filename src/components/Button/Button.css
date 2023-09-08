@@ -1,0 +1,25 @@
+.button {
+    border-radius: 6px;
+    padding: 8px 30px;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    border: none;
+}
+
+.button:hover {
+    background-color: #221eb0;
+}
+
+.accept {
+    background-color: #312EB5;
+    color: #fff;
+    /*border: 1px solid #646cff;*/
+}
+
+/*button:focus,*/
+/*button:focus-visible {*/
+/*    outline: 4px auto -webkit-focus-ring-color;*/
+/*}*/
