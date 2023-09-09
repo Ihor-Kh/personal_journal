@@ -5,24 +5,52 @@ import HeaderLeft from './components/HeaderLeft/HeaderLeft.jsx';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton.jsx';
 import JournalList from './components/JournalList/JournalList.jsx';
 import JournalForm from './components/JournalForm/JournalForm.jsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
 	const [journalData, setJournalData] = useState([
-		{
-			id: 1,
-			title: 'First title',
-			text: 'First text',
-			date: new Date(),
-		},
-		{
-			id: 2,
-			title: 'Second title',
-			text: 'Second text',
-			date: new Date(),
-		},
+		// {
+		// 	id: 1,
+		// 	title: 'First title',
+		// 	text: 'First text',
+		// 	date: new Date(),
+		// },
+		// {
+		// 	id: 2,
+		// 	title: 'Second title',
+		// 	text: 'Second text',
+		// 	date: new Date(),
+		// },
 
 	]);
+
+	useEffect(() => {
+		// localStorage.setItem('journalData', JSON.stringify( [
+		// 	{
+		// 		id: 1,
+		// 		title: 'First title',
+		// 		text: 'First text',
+		// 		date: new Date(),
+		// 	},
+		// 	{
+		// 		id: 2,
+		// 		title: 'Second title',
+		// 		text: 'Second text',
+		// 		date: new Date(),
+		// 	},
+		// ]));
+		const data = localStorage.getItem('journalData');
+		if (data) {
+			setJournalData(JSON.parse(data).map((el) => ({
+				...el,
+				date: new Date(el.date),
+			})));
+		}
+	}, []);
+
+	useEffect(() => {
+		if (journalData.length) localStorage.setItem('journalData', JSON.stringify(journalData));
+	}, [journalData]);
 
 	const addJournalItemList = (data) => {
 		setJournalData((oldItems) => [...oldItems, {
@@ -37,10 +65,10 @@ function App() {
 			<LeftLayout>
 				<HeaderLeft/>
 				<JournalAddButton/>
-				<JournalList items={journalData} />
+				<JournalList items={ journalData }/>
 			</LeftLayout>
 			<BodyLayout>
-				<JournalForm onSubmit={addJournalItemList}/>
+				<JournalForm onSubmit={ addJournalItemList }/>
 			</BodyLayout>
 		</div>
 	);
