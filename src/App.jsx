@@ -5,67 +5,41 @@ import HeaderLeft from './components/HeaderLeft/HeaderLeft.jsx';
 import JournalAddButton from './components/JournalAddButton/JournalAddButton.jsx';
 import JournalList from './components/JournalList/JournalList.jsx';
 import JournalForm from './components/JournalForm/JournalForm.jsx';
-import { useEffect, useState } from 'react';
+import { useLocalstorage } from './hooks/use-localstorage.hook.js';
+
+function mapItems (items) {
+	if (!items.length) return [];
+	return items.map(item => ({
+		...item,
+		date: new Date(item.date),
+	}));
+}
 
 function App() {
-	const [journalData, setJournalData] = useState([
-		// {
-		// 	id: 1,
-		// 	title: 'First title',
-		// 	text: 'First text',
-		// 	date: new Date(),
-		// },
-		// {
-		// 	id: 2,
-		// 	title: 'Second title',
-		// 	text: 'Second text',
-		// 	date: new Date(),
-		// },
+	const [journalData, setJournalData] = useLocalstorage('journalData');
 
-	]);
 
-	useEffect(() => {
-		// localStorage.setItem('journalData', JSON.stringify( [
-		// 	{
-		// 		id: 1,
-		// 		title: 'First title',
-		// 		text: 'First text',
-		// 		date: new Date(),
-		// 	},
-		// 	{
-		// 		id: 2,
-		// 		title: 'Second title',
-		// 		text: 'Second text',
-		// 		date: new Date(),
-		// 	},
-		// ]));
-		const data = localStorage.getItem('journalData');
-		if (data) {
-			setJournalData(JSON.parse(data).map((el) => ({
-				...el,
-				date: new Date(el.date),
-			})));
-		}
-	}, []);
+	// useEffect(() => {
+	// 	if (journalData.length) localStorage.setItem('journalData', JSON.stringify(journalData));
+	// }, [journalData]);
 
-	useEffect(() => {
-		if (journalData.length) localStorage.setItem('journalData', JSON.stringify(journalData));
-	}, [journalData]);
 
 	const addJournalItemList = (data) => {
-		setJournalData((oldItems) => [...oldItems, {
-			...data,
+		setJournalData([...journalData, {
+			title: data.title?.trim(),
+			text: data.text?.trim(),
+			tag: data.tag?.trim(),
 			date: new Date(data.date),
-			id: oldItems.length > 0 ? Math.max(...oldItems.map(el => el.id)) + 1 : 1,
+			id: journalData.length > 0 ? Math.max(...journalData.map(el => el.id)) + 1 : 1,
 		}]);
 	};
-
+	console.log(mapItems(journalData), '       journalData');
 	return (
 		<div className='app'>
 			<LeftLayout>
 				<HeaderLeft/>
 				<JournalAddButton/>
-				<JournalList items={ journalData }/>
+				<JournalList items={ mapItems(journalData) }/>
 			</LeftLayout>
 			<BodyLayout>
 				<JournalForm onSubmit={ addJournalItemList }/>

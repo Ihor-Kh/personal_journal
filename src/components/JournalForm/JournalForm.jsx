@@ -30,9 +30,24 @@ function JournalForm({onSubmit}) {
 	}, [isValidFormToSubmit]);
 
 	const focusInput = (isValid) => {
-		if (!isValid.title) titleRef.current.focus();
-		else if (!isValid.date) dateRef.current.focus();
-		else if (!isValid.text) textRef.current.focus();
+		// if (!isValid.title) titleRef.current.focus();
+		// else if (!isValid.date) dateRef.current.focus();
+		// else if (!isValid.text) textRef.current.focus();
+
+		switch (true) {
+			case !isValid.title:
+				titleRef.current.focus();
+				break;
+			case !isValid.date:
+				dateRef.current.focus();
+				break;
+			case !isValid.text:
+				textRef.current.focus();
+				break;
+			default:
+				break;
+		}
+
 	};
 
 	useEffect(() => {
@@ -47,7 +62,7 @@ function JournalForm({onSubmit}) {
 			console.log('CLEAR TIMEOUT');
 			clearTimeout(timerId);
 		};
-	}, [formValid]);
+	}, [isValid]);
 
 	const notValidClass = (nameInput) => {
 		return isValid[nameInput] ? '' : styles['journal-form__input--not-valid'];

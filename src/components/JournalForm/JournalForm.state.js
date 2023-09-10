@@ -19,10 +19,11 @@ export const formReducer = (state, action) => {
 			return { ...state, values: { ...state.values, ...action.payload}};
 		case 'CLEAR':
 			console.log('чистим банан');
-			return { ...state, values: { ...INITIAL_STATE_VALID.values} };
+			return { ...INITIAL_STATE_VALID };
 		case 'RESET':
 			return { ...state, isValid: INITIAL_STATE_VALID.isValid };
 		case 'SUBMIT':
+			console.log(state.isValidFormToSubmit, '    state.isValidFormToSubmit');
 			return {
 				isValid: {
 					title: state.values.title?.trim().length > 0,
