@@ -5,7 +5,7 @@ export const INITIAL_STATE_VALID = {
 		text: true,
 	},
 	values: {
-		title: 'Название записи',
+		title: '',
 		date: new Date().toISOString().split('T')[0],
 		text: '',
 		tag: '',
@@ -16,8 +16,6 @@ export const INITIAL_STATE_VALID = {
 export const formReducer = (state, action) => {
 	switch (action.type) {
 		case 'SET_VALUE':
-			console.log(action.payload);
-			console.log(state.values, 'банан');
 			return { ...state, values: { ...state.values, ...action.payload}};
 		case 'CLEAR':
 			console.log('чистим банан');
@@ -27,12 +25,12 @@ export const formReducer = (state, action) => {
 		case 'SUBMIT':
 			return {
 				isValid: {
-					title: action.payload.title?.trim().length > 0,
-					date: !!action.payload.date,
-					text: action.payload.text?.trim().length > 0,
+					title: state.values.title?.trim().length > 0,
+					date: !!state.values.date,
+					text: state.values.text?.trim().length > 0,
 				},
-				values: action.payload,
-				isValidFormToSubmit: Object.values(state.isValid).every((value) => value === true),
+				values: state.values,
+				isValidFormToSubmit: state.isValid.title && state.isValid.date && state.isValid.text,
 			};
 	}
 };

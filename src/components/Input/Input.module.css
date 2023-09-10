@@ -1,0 +1,23 @@
+.input {
+    border: none;
+    background: none;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    font-family: "Roboto Light", sans-serif;
+}
+
+.input:focus {
+    outline: none;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.not-valid {
+    border: 1px solid red;
+    border-radius: 2px;
+    padding: 2px 2px;
+}
