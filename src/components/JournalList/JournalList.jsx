@@ -3,8 +3,9 @@ import CardButton from '../CardButton/CardButton.jsx';
 import JournalItem from '../JournalItem/JournalItem.jsx';
 import { UserContext } from '../../context/user.context.jsx';
 import { useContext, useMemo } from 'react';
+import { formReducer } from '../JournalForm/JournalForm.state.js';
 
-function JournalList({ items }) {
+function JournalList({ items, setItem }) {
 
 	const { userId } = useContext(UserContext);
 
@@ -33,12 +34,11 @@ function JournalList({ items }) {
         );
     }
 
-
 	return (
 		<div className='journal-list'>
 			{ computedFilteredItems.map(el => {
 				return (
-					<CardButton key={ el.id }>
+					<CardButton key={ el.id } onClick={ () => setItem(el) }>
 						<JournalItem
 							title={ el.title }
 							text={ el.text }

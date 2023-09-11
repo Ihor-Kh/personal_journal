@@ -6,7 +6,7 @@ import { formReducer, INITIAL_STATE_VALID } from './JournalForm.state.js';
 import Input from '../Input/Input.jsx';
 import { UserContext } from '../../context/user.context.jsx';
 
-function JournalForm({onSubmit}) {
+function JournalForm({onSubmit, selectedItem, deleteItem}) {
 
 	const [formValid, dispatchValid] = useReducer(formReducer, {...INITIAL_STATE_VALID});
 	const {isValid, isValidFormToSubmit, values} = formValid;
@@ -15,7 +15,7 @@ function JournalForm({onSubmit}) {
 	const dateRef = useRef();
 	const textRef = useRef();
 
-	const { userId } = useContext(UserContext);
+	const {userId} = useContext(UserContext);
 
 	const addJournalItem = (event) => {
 		event.preventDefault();
@@ -35,6 +35,19 @@ function JournalForm({onSubmit}) {
 			dispatchValid({type: 'CLEAR'});
 		}
 	}, [isValidFormToSubmit]);
+
+	useEffect(() => {
+		if (selectedItem.date) {
+			dispatchValid({
+				type: 'SET_VALUE', payload: {
+					...selectedItem,
+					date: selectedItem.date.toISOString().split('T')[0],
+				},
+			});
+		} else {
+			dispatchValid({type: 'CLEAR'});
+		}
+	}, [selectedItem]);
 
 	const focusInput = (isValid) => {
 		// if (!isValid.title) titleRef.current.focus();
@@ -79,28 +92,37 @@ function JournalForm({onSubmit}) {
 		dispatchValid({type: 'SET_VALUE', payload: {[event.target.name]: event.target.value}});
 	};
 
+	// const deleteItemAndCleare = () => {
+	// 	deleteItem(values.id);
+	// 	dispatchValid({type: 'CLEAR'});
+	// };
+
 	return (
 		<form className={ styles['journal-form'] } onSubmit={ addJournalItem }>
 			<div className={ styles['journal-form__title'] }>
 				<Input
 					ref={ titleRef }
 					appearance='title'
-					isValid={isValid.title}
+					isValid={ isValid.title }
 					type='text'
 					name='title'
 					onChange={ onChangeInput }
 					value={ values.title }
 				/>
-				<div className={ styles['journal-form__trash'] }>
-					<img src="/trash.svg" alt="trash"/>
-				</div>
+				{
+					values.id &&
+					<div className={ styles['journal-form__trash'] } onClick={ () => deleteItem(values.id) }>
+						<img src="/trash.svg" alt="trash"/>
+					</div>
+				}
+
 			</div>
 
 			<div>
 				<InputFormItem icon='calendar.svg' nameLabel='Дата' nameInput='date'>
 					<Input
 						ref={ dateRef }
-						isValid={isValid.date}
+						isValid={ isValid.date }
 						type='date'
 						name='date'
 						id='date'

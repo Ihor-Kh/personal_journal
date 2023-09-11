@@ -1,9 +1,9 @@
 import './JournalAddButton.css';
 import CardButton from '../CardButton/CardButton.jsx';
 
-function JournalAddButton() {
+function JournalAddButton({ ...props }) {
     return (
-        <CardButton className='journal-add'>
+        <CardButton { ...props } className='journal-add'>
             <img src="/plus.svg" alt="+"/>
             Новое воспоминание
         </CardButton>

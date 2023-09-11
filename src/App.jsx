@@ -7,6 +7,7 @@ import JournalList from './components/JournalList/JournalList.jsx';
 import JournalForm from './components/JournalForm/JournalForm.jsx';
 import { useLocalstorage } from './hooks/use-localstorage.hook.js';
 import { UserContextProvider } from './context/user.context.jsx';
+import { useState } from 'react';
 
 
 function mapItems(items) {
@@ -19,24 +20,56 @@ function mapItems(items) {
 
 function App() {
 	const [journalData, setJournalData] = useLocalstorage('journalData');
-
+	const [selectedItem, setSelectedItem] = useState({});
 
 	// useEffect(() => {
 	// 	if (journalData.length) localStorage.setItem('journalData', JSON.stringify(journalData));
 	// }, [journalData]);
 
+	const resetSelectedItem = () => {
+		setSelectedItem({});
+	};
 
 	const addJournalItemList = (data) => {
 		console.log(data, '        data');
-		setJournalData([...journalData, {
-			title: data.title?.trim(),
-			text: data.text?.trim(),
-			tag: data.tag?.trim(),
-			date: new Date(data.date),
-			id: journalData.length > 0 ? Math.max(...journalData.map(el => el.id)) + 1 : 1,
-			user: data.user,
-		}]);
+		if (data.id) {
+			setJournalData(journalData.map(el => {
+				if (el.id === data.id) {
+					return {
+						...el,
+						title: data.title?.trim(),
+						text: data.text?.trim(),
+						tag: data.tag?.trim(),
+						date: new Date(data.date),
+					};
+				}
+				return el;
+			}));
+			resetSelectedItem();
+		} else {
+			setJournalData([...journalData, {
+				title: data.title?.trim(),
+				text: data.text?.trim(),
+				tag: data.tag?.trim(),
+				date: new Date(data.date),
+				id: journalData.length > 0 ? Math.max(...journalData.map(el => el.id)) + 1 : 1,
+				user: data.user,
+			}]);
+		}
+
 	};
+
+	const deleteJournalItemList = (id) => {
+		setJournalData(journalData.filter(el => el.id !== id));
+		resetSelectedItem();
+	};
+
+
+
+	// useEffect(() => {
+	// 	console.log('App useEffect');
+	// 	console.log(selectedItem, '    selectedItem');
+	// }, [selectedItem]);
 
 	console.log('App render');
 
@@ -45,11 +78,11 @@ function App() {
 			<div className='app'>
 				<LeftLayout>
 					<HeaderLeft/>
-					<JournalAddButton/>
-					<JournalList items={ mapItems(journalData) }/>
+					<JournalAddButton onClick={ resetSelectedItem }/>
+					<JournalList items={ mapItems(journalData) } setItem={ setSelectedItem }/>
 				</LeftLayout>
 				<BodyLayout>
-					<JournalForm onSubmit={ addJournalItemList }/>
+					<JournalForm onSubmit={ addJournalItemList } selectedItem={ selectedItem } deleteItem={deleteJournalItemList}/>
 				</BodyLayout>
 			</div>
 		</UserContextProvider>
