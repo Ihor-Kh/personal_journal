@@ -6,8 +6,10 @@ import JournalAddButton from './components/JournalAddButton/JournalAddButton.jsx
 import JournalList from './components/JournalList/JournalList.jsx';
 import JournalForm from './components/JournalForm/JournalForm.jsx';
 import { useLocalstorage } from './hooks/use-localstorage.hook.js';
+import { UserContextProvider } from './context/user.context.jsx';
 
-function mapItems (items) {
+
+function mapItems(items) {
 	if (!items.length) return [];
 	return items.map(item => ({
 		...item,
@@ -25,26 +27,32 @@ function App() {
 
 
 	const addJournalItemList = (data) => {
+		console.log(data, '        data');
 		setJournalData([...journalData, {
 			title: data.title?.trim(),
 			text: data.text?.trim(),
 			tag: data.tag?.trim(),
 			date: new Date(data.date),
 			id: journalData.length > 0 ? Math.max(...journalData.map(el => el.id)) + 1 : 1,
+			user: data.user,
 		}]);
 	};
-	console.log(mapItems(journalData), '       journalData');
+
+	console.log('App render');
+
 	return (
-		<div className='app'>
-			<LeftLayout>
-				<HeaderLeft/>
-				<JournalAddButton/>
-				<JournalList items={ mapItems(journalData) }/>
-			</LeftLayout>
-			<BodyLayout>
-				<JournalForm onSubmit={ addJournalItemList }/>
-			</BodyLayout>
-		</div>
+		<UserContextProvider>
+			<div className='app'>
+				<LeftLayout>
+					<HeaderLeft/>
+					<JournalAddButton/>
+					<JournalList items={ mapItems(journalData) }/>
+				</LeftLayout>
+				<BodyLayout>
+					<JournalForm onSubmit={ addJournalItemList }/>
+				</BodyLayout>
+			</div>
+		</UserContextProvider>
 	);
 }
 

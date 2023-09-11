@@ -1,16 +1,10 @@
 import './Button.css';
 
-function Button({text}) {
-
-    // const [text, setText] = useState('Сохранить');
-    //
-    // const clicked = () => {
-    //     setText('Закрыть');
-    //     console.log('clicked');
-    // };
-
+function Button({children, ...props}) {
     return (
-        <button className='button accept'>{text}</button>
+        <button {...props} className='button accept'>
+            {children}
+        </button>
     );
 }
 

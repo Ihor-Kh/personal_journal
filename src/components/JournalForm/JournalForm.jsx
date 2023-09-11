@@ -1,9 +1,10 @@
 import styles from './JournalForm.module.css';
 import Button from '../Button/Button.jsx';
-import { useEffect, useReducer, useRef } from 'react';
+import { useContext, useEffect, useReducer, useRef } from 'react';
 import InputFormItem from '../InputFormItem/InputFormItem.jsx';
 import { formReducer, INITIAL_STATE_VALID } from './JournalForm.state.js';
 import Input from '../Input/Input.jsx';
+import { UserContext } from '../../context/user.context.jsx';
 
 function JournalForm({onSubmit}) {
 
@@ -14,6 +15,8 @@ function JournalForm({onSubmit}) {
 	const dateRef = useRef();
 	const textRef = useRef();
 
+	const { userId } = useContext(UserContext);
+
 	const addJournalItem = (event) => {
 		event.preventDefault();
 		// const formData = new FormData(event.target);
@@ -23,8 +26,12 @@ function JournalForm({onSubmit}) {
 	};
 
 	useEffect(() => {
-		if (isValidFormToSubmit) {
-			onSubmit(formValid.values);
+		console.log(isValidFormToSubmit, '    isValidFormToSubmit');
+		if (isValidFormToSubmit === true) {
+			onSubmit({
+				...formValid.values,
+				user: userId,
+			});
 			dispatchValid({type: 'CLEAR'});
 		}
 	}, [isValidFormToSubmit]);
@@ -59,7 +66,6 @@ function JournalForm({onSubmit}) {
 			}, 2000);
 		}
 		return () => {
-			console.log('CLEAR TIMEOUT');
 			clearTimeout(timerId);
 		};
 	}, [isValid]);
@@ -120,7 +126,7 @@ function JournalForm({onSubmit}) {
 				value={ values.text }
 				className={ `${ styles['input'] } ${ styles['input-textarea'] } ${ notValidClass('text') }` }
 			/>
-			<Button text='Сохранить'/>
+			<Button>Сохранить</Button>
 		</form>
 	);
 }
